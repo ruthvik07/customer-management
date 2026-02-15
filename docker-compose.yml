@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:15          # use PostgreSQL version 15
+    environment:
+      POSTGRES_DB: customerManagement      # name of the database
+      POSTGRES_USER: user       # username
+      POSTGRES_PASSWORD: password  # password
+    ports:
+      - "5433:5432"             # expose it on port 5432
+  # backend:
+  #   build: ./backend
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - db

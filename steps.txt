@@ -1,0 +1,42 @@
+1. mkdir frontend and backend folder
+2. bootstrap (generate initial project structure and boilerplate code) Spring Boot backend
+    2.1. use dependencies:
+        - Spring Web - lets you build REST API, used to talk to outside world
+        - Spring Data JPA - lets you work with databases using java objects instead of using SQL queries
+        - PostgreSQL Driver - translator between the Java app and the database, Spring Data JPA knows how to talk to databases in general, but it needs this driver to speak PostgreSQL specifically. Think of it like a language plugin — without it, your app and the database can't understand each other.
+        - Spring security
+    2.2 so the flow is:
+        React Frontend
+            ↓  HTTP request
+        Spring Web        ← handles the request, sends response
+            ↓
+        Spring Data JPA   ← converts Java objects ↔ database rows
+            ↓
+        PostgreSQL Driver ← speaks directly to the database
+            ↓
+        PostgreSQL DB
+3. start the db on docker using: docker compose up -d
+    check using: docker ps
+    The laptop is already using 5432 so using 5433 instead, see changes in docker-compose.yml
+4. start and check if the Spring boot app is working using: mvn spring-boot:run
+5. create Customer.java nad CustomerRepository.java
+    using Lombok here to make a much easier boiler plate for Entity (take care about adding Lombom in pom.xml)
+6. create dto and controller files
+7. Create exception classes
+8. authorisation:
+    - JwtUtil.java:
+        has the methods to generate and validate Jwt token
+        Jwt token has 3 parts: Header (algo used SHA256), Payload (user, issued at, expiry), Signature (making sure the token is the same one created by the backend)
+    - JwtAuthFilter.java:
+        this filter extends OncePerRequestFilter, so basically every request that comes in is caught here once and this filter's work is to check if the request is authenticated or not.
+        It checks the authentication using SecurityContextHolder.getContext().getAuthentication() which is usually none as we no other filters to authenticate
+        Then we say yes this request is authenticated by attaching 
+        // Yes it does — stamp this request as authenticated
+        UsernamePasswordAuthenticationToken authToken = 
+            new UsernamePasswordAuthenticationToken(
+                userDetails,        // who they are
+                null,               // no password needed, token already proved identity
+                userDetails.getAuthorities()  // what they're allowed to do
+            );
+        And send it forward using filterChain
+9. 
