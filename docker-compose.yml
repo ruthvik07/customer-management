@@ -7,11 +7,24 @@ services:
       POSTGRES_PASSWORD: password  # password
     ports:
       - "5433:5432"             # expose it on port 5432
-  # backend:
-  #   build: ./backend
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
